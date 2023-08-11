@@ -25,6 +25,9 @@ class GroupExercise:
     def get_max_capacity(self):
         return self.__max_capacity
     
+    def set_max_capacity(self, max_capacity):
+        self.__max_capacity = max_capacity
+    
     def get_participants(self):
         return self.__participants
     
@@ -45,17 +48,21 @@ class GroupExercise:
     def enroll(self, member):
         if len(self.__participants) < self.__max_capacity:
             self.__participants.append(member)
-            member.add_group_exercise(self)
+            member.book_group_exercise(self)
+            print("Member enrolled")
         else:
             self.__wait_list.append(member)
+            print("Group exercise is full, member added to wait list")
     
     #remove member        
     def remove_member(self, member):
         if member in self.__participants:
             self.__participants.remove(member)
-            member.remove_group_exercise(self)
+            member.cancel_group_exercise(self)
+            print("Member removed")
         elif member in self.__wait_list:
             self.__wait_list.remove(member)
+            print("Member removed from wait list")
         else:
             print("Member not found")
     
@@ -92,6 +99,7 @@ class GroupExercise:
                 print("Member already checked in")
             else:
                 self.__checked_in.append(member)
+                print("Member checked in")
         else:
             print("Member not enrolled in this group exercise")
     
@@ -99,6 +107,11 @@ class GroupExercise:
     def attendance_rate(self):
         return len(self.__checked_in) / len(self.__participants)
 
+    #wait list
+    def display_wait_list(self):
+        for member in self.__wait_list:
+            print(member.get_full_name())
+        
     def __str__(self):
         return f"GroupExercise(Name: {self.__name}, Trainer: {self.__trainer.get_name() if self.__trainer else 'None'}, Capacity: {self.__max_capacity})"
 
@@ -125,12 +138,13 @@ class Member:
         if group_exercise in self.__enrolled_group_exercise:
             print("You are already enrolled in this group exercise")
         else:
-            group_exercise.enroll(self)
+            self.__enrolled_group_exercise.append(group_exercise)
     
     #cancel group exercise
     def cancel_group_exercise(self, group_exercise):
         if group_exercise in self.__enrolled_group_exercise:
             group_exercise.remove_member(self)
+            print("Group exercise cancelled")
         else:
             print("You are not enrolled in this group exercise")
             
@@ -169,6 +183,7 @@ class Trainer:
             print("This group exercise is already assigned to this trainer")
         else:
             self.__assigned_group_exercises.append(group_exercise)
+            print("Group exercise assigned")
             
     def __str__(self):
         return f"Trainer(Name: {self.__full_name}, Specialisation: {self.__specialisation})"
@@ -196,3 +211,70 @@ trainer1 = Trainer("John Armstrong", "Yoga")
 trainer2 = Trainer("peter Parker", "Zumba")
 
 print(trainer1)
+
+#assign trainer to group exercise
+groupexercise1.assign_trainer(trainer1)
+
+print(groupexercise1.get_trainer())
+
+#set fee amount
+groupexercise1.set_fee_amount(10)
+groupexercise2.set_fee_amount(20)
+
+print(groupexercise1.get_fee_amount())
+
+#set max capacity
+
+groupexercise1.set_max_capacity(10)
+groupexercise2.set_max_capacity(20)
+print(groupexercise1.get_max_capacity())
+
+
+#set 3 members to group exercise 1
+
+groupexercise1.enroll(member1)
+groupexercise1.enroll(member2)
+groupexercise1.enroll(member3)
+
+#check number of participants
+part = groupexercise1.count_participants()
+print(part)
+
+#cancel member 1 from group exercise 1
+groupexercise1.remove_member(member1)
+
+print(groupexercise1.count_participants())
+
+#record check in
+groupexercise1.mark_attendance(member2)
+
+#dispaly list of members enrolled
+GroupExercise.enrolled_members(groupexercise1)
+
+#dispaly wait list
+GroupExercise.get_wait_list(groupexercise1)
+
+#display number of available slots
+print(groupexercise1.available_slots())
+
+#display number of participants enrolled
+groupexercise1.enrolled_members()
+
+#display number of wait list participants
+  
+groupexercise1.display_wait_list()
+
+#display number of attendees
+print(groupexercise1.count_participants())
+
+#display attendance rate
+print(groupexercise1.attendance_rate() * 100, "%")
+
+#display total payments received
+print(groupexercise1.payments_received())
+
+#display list of group exercise classes for member 1
+member1.booked_group_exercise()
+
+#display the list of class offered by trainer 1
+trainer1.assigned_group_exercises()
