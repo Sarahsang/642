@@ -1,5 +1,6 @@
 # Miao Sang Assignment 1
 # create group exercise class
+# []空列表 等待添加数据
 class GroupExercise:
     def __init__(self, name, max_capacity, fee_amount=0):
         self.__name = name
@@ -11,6 +12,7 @@ class GroupExercise:
         self.__checked_in = []
     
     # Getter and setter methods
+    # 
     
     def get_name(self):
         return self.__name
